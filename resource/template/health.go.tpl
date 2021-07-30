@@ -1,7 +1,7 @@
 package router
 
 import (
-    "{{.ModuleName}}/api/v1"
+    "{{.ModuleName}}/api"
     "github.com/gin-gonic/gin"
 )
 

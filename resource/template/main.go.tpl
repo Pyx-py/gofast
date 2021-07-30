@@ -2,16 +2,15 @@
 package main
 
 import (
-	{{- if ne .LogPath ""}}"github.com/Pyx-py/gofast/core"{{- end}}
+	{{- if ne .LogPath ""}}
+	"github.com/Pyx-py/gofast/core"
+	{{- end}}
 	"github.com/Pyx-py/gofast/global"
 	gf_init "github.com/Pyx-py/gofast/initialize"
 	"{{.ModuleName}}/initialize"
 	"github.com/fvbock/endless"
 	"time"
-	{{- if eq .LogPath ""}}
 	"fmt"
-	{{- end}}
-
 )
 
 const (
@@ -37,7 +36,7 @@ type server interface {
 func init() {
 	{{- if ne .LogPath "" }}
 	logConfig := core.LogConfig{
-		LogPath: {{.LogPath}},
+		LogPath: "{{.LogPath}}",
 		LogLevel:     "",
 		LogName:      "",
 		EncoderLevel: "",
@@ -63,7 +62,7 @@ func init() {
 	mysqlConfig := gf_init.MysqlConfig{
 		LogMode: "info",    // gorm的日志等级
 		LogZap:  false,    // 是否将sql的详情日志加载到全局日志文件中，默认只会在控制台打印
-		LogPath:  {{- if eq .LogPath ""}}""{{- else}}{{.LogPath}}{{end}},    // 日志文件路径，此参数为空sql日志也不会加载到全局日志文件
+		LogPath:  {{- if eq .LogPath ""}}""{{- else}}"{{.LogPath}}"{{end}},    // 日志文件路径，此参数为空sql日志也不会加载到全局日志文件
 		Dsn:          "",     // 数据库的连接地址（必填，如: user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local）
 		StringSize:   255,     // 字符类型字段的默认长度
 		MaxIdleConns: 10,      // 数据库最大连接数 （默认10）

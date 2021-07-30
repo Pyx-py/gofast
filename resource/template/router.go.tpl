@@ -2,7 +2,6 @@ package router
 
 import (
 	"{{.ModuleName}}/api"
-	"github.com/Pyx-py/gofast/middleware"
 	"github.com/gin-gonic/gin"
 )
 

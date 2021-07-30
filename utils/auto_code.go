@@ -57,19 +57,19 @@ var (
 
 // 初始版本自动化代码工具
 type AutoCoder struct {
-	ModuleName          string   `json:"moduleName"`  // 用户的module名称
-	ProjectPath         string   `json:"projectPath"` // 用户的项目路径
-	LogPath             string   `json:"logPath"`     // 日志的存放路径，为空代表不启用默认日志
-	TplPath             string   `json:"tplPath"`     // 模板文件dir
-	StructName          string   `json:"structName"`
-	TableName           string   `json:"tableName"`
-	Abbreviation        string   `json:"abbreviation"`
-	ImportTime          bool     `json:"importTime"`
-	GoStructString      string   `json:"goStructString"`
-	Fields              []*Field `json:"fields"`
-	ColSearchTypeString string   `json:"colSearchTypeString"`
-	SqlPath             string   `json:"sqlPath"`    // 传入的sql文件路径
-	GoFastPath          string   `json:"goFastPath"` //
+	ModuleName          string        `json:"moduleName"`  // 用户的module名称
+	ProjectPath         string        `json:"projectPath"` // 用户的项目路径
+	LogPath             string        `json:"logPath"`     // 日志的存放路径，为空代表不启用默认日志
+	TplPath             string        `json:"tplPath"`     // 模板文件dir
+	StructName          string        `json:"structName"`
+	TableName           string        `json:"tableName"`
+	Abbreviation        string        `json:"abbreviation"`
+	ImportTime          bool          `json:"importTime"`
+	GoStructString      template.HTML `json:"goStructString"`
+	Fields              []*Field      `json:"fields"`
+	ColSearchTypeString string        `json:"colSearchTypeString"`
+	SqlPath             string        `json:"sqlPath"`    // 传入的sql文件路径
+	GoFastPath          string        `json:"goFastPath"` //
 }
 
 type Field struct {
@@ -166,10 +166,10 @@ func NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchTypeString, log
 
 			gormStr := buildGormStr(col, primaryIdxMap, uniqueIdxMap, idxMap)
 			buildGormStr(col, primaryIdxMap, uniqueIdxMap, idxMap)
-			builder.WriteString(fmt.Sprintf("\t%s\t%-25s `json:\"%s\" gorm:\"%s\"`\n", fieldName, goType, col.Name.String(), gormStr))
+			builder.WriteString(fmt.Sprintf("\t%s\t%-25s ", fieldName, goType) + "`json:" + `"` + col.Name.String() + `"` + " gorm:" + `"` + gormStr + `"` + "`\n")
 		}
 		builder.WriteString("}\n")
-		autoCoder.GoStructString = builder.String()
+		autoCoder.GoStructString = template.HTML(builder.String())
 	}
 
 	return autoCoder, nil
@@ -210,7 +210,7 @@ func handleSearchMap(colSearchMapString string) map[string]string {
 		return searchMap
 	}
 
-	mapList := strings.Split(colSearchMapString, "|")
+	mapList := strings.Split(colSearchMapString, "#")
 	for _, m := range mapList {
 		kv := strings.Split(m, ":")
 		searchMap[strings.Trim(kv[0], " ")] = strings.Trim(kv[1], " ")
@@ -276,12 +276,12 @@ func buildGormStr(col *sqlparser.ColumnDefinition, primaryIdxMap map[string]stri
 	}
 
 	if col.Type.Autoincrement {
-		builder.WriteString(" auto_increment")
+		builder.WriteString(" autoIncrement")
 	}
 
 	_, ok := primaryIdxMap[col.Name.String()]
 	if ok {
-		builder.WriteString(";primary_key")
+		builder.WriteString(";primaryKey")
 	}
 	_, ok = uniqueIdxMap[col.Name.String()]
 	if ok {
@@ -313,7 +313,7 @@ func buildGormStr(col *sqlparser.ColumnDefinition, primaryIdxMap map[string]stri
 		commentStr := fmt.Sprintf(";comment:'%s'", col.Type.Comment.Val)
 		builder.WriteString(commentStr)
 	}
-
+	builder.WriteString(";")
 	return builder.String()
 }
 
@@ -401,6 +401,13 @@ func (t *AutoCoder) CreateTemp() (err error) {
 				if err = executeTemplate(&value, t); err != nil {
 					return err
 				}
+				if t.SqlPath != "" {
+					err := t.writeInitRouterCode(value.autoCodePath)
+					if err != nil {
+						fmt.Printf("first write router err :%s", err.Error())
+						return err
+					}
+				}
 			}
 			continue
 		}
@@ -487,9 +494,9 @@ func (t *AutoCoder) writeInitRouterCode(filePath string) error {
 
 	for {
 		content, _, err := reader.ReadLine()
-		lineList = append(lineList, string(content))
+		lineList = append(lineList, string(content)+"\n")
 		if strings.Contains(string(content), "**BEGIN") {
-			lineList = append(lineList, "    router.Init"+t.StructName+"Router(group)")
+			lineList = append(lineList, "    router.Init"+t.StructName+"Router(group)\n")
 		}
 		if err == io.EOF {
 			break

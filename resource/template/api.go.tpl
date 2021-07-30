@@ -11,6 +11,9 @@ import (
     "{{.ModuleName}}/model/response"
     "{{.ModuleName}}/model"
     "{{.ModuleName}}/service"
+    {{- if .LogPath}}
+    "go.uber.org/zap"
+    {{- end}}
 )
 
 // @Tags {{.StructName}}
@@ -95,9 +98,9 @@ func Update{{.StructName}}(c *gin.Context) {
     _ = c.ShouldBindJSON(&{{.Abbreviation}})
     if err := service.Update{{.StructName}}({{.Abbreviation}}); err != nil {
     {{- if ne .LogPath ""}}
-        global.GF_LOG.Error("更新失败", c)
+        global.GF_LOG.Error("更新失败", zap.Any("err", err))
     {{- else}}
-        /* global.GF_LOG.Error("更新失败", c) */
+        /* global.GF_LOG.Error("更新失败", zap.Any("err", err)) */
     {{- end}}
         response.FailWithMessage("更新失败", c)
     } else {

@@ -17,7 +17,7 @@ func NewCodeTool(projectPath, gofastPath string) {
 		gofastPath = path
 	}
 	fmt.Println(gofastPath)
-	fmt.Printf("go build -o %s %s/cmd/main.go", projectPath+"/gf", gofastPath)
+	fmt.Printf("go build -o %s %s/cmd/main.go", projectPath+"/gf\n", gofastPath)
 	cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("go build -o %s %s/cmd/main.go", projectPath+"/gf", gofastPath))
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
