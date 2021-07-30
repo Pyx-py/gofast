@@ -2,9 +2,9 @@ package v1
 
 import (
     {{- if ne .LogPath ""}}
-    "github.com/Pyx-py/gofast/global"
+    "github.com/pyx-py/gofast/global"
     {{- else}}
-    /* "github.com/Pyx-py/gofast/global" */
+    /* "github.com/pyx-py/gofast/global" */
     {{- end}}
     "github.com/gin-gonic/gin"
     "{{.ModuleName}}/model/request"

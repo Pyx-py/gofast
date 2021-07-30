@@ -1,8 +1,8 @@
 package initialize
 
 import (
-	"github.com/Pyx-py/gofast/global"
-	"github.com/Pyx-py/gofast/middleware"
+	"github.com/pyx-py/gofast/global"
+	"github.com/pyx-py/gofast/middleware"
 	"github.com/gin-gonic/gin"
 	"{{.ModuleName}}/router"
 	ginSwagger "github.com/swaggo/gin-swagger"

@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os/exec"
 
-	"github.com/Pyx-py/gofast/utils"
+	"github.com/pyx-py/gofast/utils"
 )
 
 func NewCodeTool(projectPath, gofastPath string) {

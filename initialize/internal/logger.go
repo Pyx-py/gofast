@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Pyx-py/gofast/global"
+	"github.com/pyx-py/gofast/global"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"
 )

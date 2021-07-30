@@ -3,10 +3,10 @@ package main
 
 import (
 	{{- if ne .LogPath ""}}
-	"github.com/Pyx-py/gofast/core"
+	"github.com/pyx-py/gofast/core"
 	{{- end}}
-	"github.com/Pyx-py/gofast/global"
-	gf_init "github.com/Pyx-py/gofast/initialize"
+	"github.com/pyx-py/gofast/global"
+	gf_init "github.com/pyx-py/gofast/initialize"
 	"{{.ModuleName}}/initialize"
 	"github.com/fvbock/endless"
 	"time"

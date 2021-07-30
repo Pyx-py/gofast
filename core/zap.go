@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Pyx-py/gofast/utils"
+	"github.com/pyx-py/gofast/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

@@ -1,4 +1,4 @@
-module github.com/Pyx-py/gofast
+module github.com/pyx-py/gofast
 
 go 1.16
 

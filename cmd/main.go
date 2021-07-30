@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Pyx-py/gofast/cmd/gf"
+import "github.com/pyx-py/gofast/cmd/gf"
 
 func main() {
 	gf.Execute()

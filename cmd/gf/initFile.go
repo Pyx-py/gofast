@@ -3,7 +3,7 @@ package gf
 import (
 	"fmt"
 
-	"github.com/Pyx-py/gofast/utils"
+	"github.com/pyx-py/gofast/utils"
 	"github.com/spf13/cobra"
 )
 

@@ -13,7 +13,7 @@ import (
 	"github.com/xwb1989/sqlparser"
 )
 
-const GOFAST = "github.com/Pyx-py/gofast"
+const GOFAST = "github.com/pyx-py/gofast"
 
 var (
 	SqlGoTypeMap = map[string]string{

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/Pyx-py/gofast/global"
+	"github.com/pyx-py/gofast/global"
 	"{{.ModuleName}}/model"
 	"{{.ModuleName}}/model/request"
 )

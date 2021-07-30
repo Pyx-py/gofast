@@ -8,8 +8,8 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/Pyx-py/gofast/global"
 	"github.com/gin-gonic/gin"
+	"github.com/pyx-py/gofast/global"
 	"go.uber.org/zap"
 )
 

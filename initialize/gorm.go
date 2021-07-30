@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 
-	"github.com/Pyx-py/gofast/initialize/internal"
+	"github.com/pyx-py/gofast/initialize/internal"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
