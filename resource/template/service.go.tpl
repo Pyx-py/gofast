@@ -28,16 +28,6 @@ func Delete{{.StructName}}({{.Abbreviation}} model.{{.StructName}}) (err error) 
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: Delete{{.StructName}}ByIds
-//@description: 批量删除{{.StructName}}记录
-//@param: ids request.IdsReq
-//@return: err error
-
-func Delete{{.StructName}}ByIds(ids request.IdsReq) (err error) {
-	err = global.GF_DB.Delete(&[]model.{{.StructName}}{},"id in ?",ids.Ids).Error
-	return err
-}
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: Update{{.StructName}}
@@ -50,16 +40,6 @@ func Update{{.StructName}}({{.Abbreviation}} model.{{.StructName}}) (err error) 
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: Get{{.StructName}}
-//@description: 根据id获取{{.StructName}}记录
-//@param: id uint
-//@return: err error, {{.Abbreviation}} model.{{.StructName}}
-
-func Get{{.StructName}}(id uint) (err error, {{.Abbreviation}} model.{{.StructName}}) {
-	err = global.GF_DB.Where("id = ?", id).First(&{{.Abbreviation}}).Error
-	return
-}
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: Get{{.StructName}}InfoList

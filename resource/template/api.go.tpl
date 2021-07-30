@@ -35,7 +35,7 @@ func Create{{.StructName}}(c *gin.Context) {
     {{- end}}
         response.FailWithMessage("创建失败", c)
     } else {
-        response.OKWithMessage("创建成功", c)
+        response.OkWithMessage("创建成功", c)
     }
 }
 
@@ -58,32 +58,10 @@ func Delete{{.StructName}}(c *gin.Context) {
     {{- end}}
         response.FailWithMessage("删除失败", c)
     } else {
-        response.OKWithMessage("删除成功", c)
+        response.OkWithMessage("删除成功", c)
     }
 }
 
-// Tags {{.StructName}}
-// @Summary 批量删除{{.StructName}}
-// @Security ApiKeyAuth
-// @accept application/json
-// @Produce application/json
-// @Param data body request.IdsReq true "批量删除{{.StructName}}"
-// @Success 200 {string} string "{"success":true,"data":{}, "msg":"批量删除成功"}"
-// @Router /{{.Abbreviation}}/delete{{.StructName}}ByIds [delete]
-func Delete{{.StructName}}ByIds(c *gin.Context) {
-    var IDS request.IdsReq
-    _ = c.ShouldBindJSON(&IDS)
-    if err := service.Delete{{.StructName}}ByIds(IDS); err != nil {
-    {{- if ne .LogPath ""}}
-        global.GF_LOG.Error("批量删除失败！", zap.Any("err", err))
-    {{- else}}
-        /* global.GF_LOG.Error("批量删除失败！", zap.Any("err", err)) */
-    {{- end}}    
-        response.FailWithMessage("批量删除失败", c)
-    } else {
-        response.OKWithMessage("批量删除成功", c)
-    }
-}
 
 // Tags {{.StructName}}
 // @Summary 更新{{.StructName}}
@@ -104,32 +82,10 @@ func Update{{.StructName}}(c *gin.Context) {
     {{- end}}
         response.FailWithMessage("更新失败", c)
     } else {
-        response.OKWithMessage("更新成功", c)
+        response.OkWithMessage("更新成功", c)
     }
 }
 
-// Tags {{.StructName}}
-// @Summary 用id查询{{.StructName}}
-// @Security ApiKeyAuth
-// @accept application/json
-// @Produce application/json
-// @Param data body model.{{.StructName}} true "用id查询{{.StructName}}"
-// @Success 200 {string} string "{"success":true,"data":{}, "msg":"更新成功"}"
-// @Router /{{.Abbreviation}}/find{{.StructName}} [get]
-func Find{{.StructName}}(c *gin.Context) {
-    var {{.Abbreviation}} model.{{.StructName}}
-    _ = c.ShouldBindJSON(&{{.Abbreviation}})
-    if err, re{{.Abbreviation}} := service.Get{{.StructName}}({{.Abbreviation}}.ID); err != nil {
-    {{- if ne .LogPath ""}}
-        global.GF_LOG.Error("查询失败！", zap.Any("err", err))
-    {{- else}}
-        /* global.GF_LOG.Error("查询失败！", zap.Any("err", err)) */
-    {{- end}}
-        response.FailWithMessage("查询失败", c)
-    } else {
-        response.OKWithData(gin.H{"re{{.Abbreviation}}": re{{.Abbreviation}}}, c)
-    }
-}
 
 // Tags {{.StructName}}
 // @Summary 分页获取{{.StructName}}列表
