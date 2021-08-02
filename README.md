@@ -114,6 +114,7 @@ go mod init demo
 # 下载gofast包, 执行：
 go mod tidy
 ```
+> 这里有一个问题：如果你的go版本是1.16，单独执行go mod tidy拉取下来的依赖包会少那么几个，需要再执行go mod download,并且download的时间会稍微比tidy的时间长一些; 如果go版本在1.16以下，就不会有这个问题，只需要go mod tidy就ok; 具体原因未知，可能是go更新到1.16版本后的默认拉取策略做了更改，不知道1.17出来会不会有这个问题，这里mark下。
 ```bash
 # 生成命令行工具，执行:
 go run main.go
