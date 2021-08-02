@@ -23,12 +23,14 @@ func (mc MysqlConfig) initMysqlConfig() (nmc MysqlConfig) {
 	if mc.Dsn == "" {
 		panic(fmt.Errorf("mysql dsn can't be empty"))
 	}
+	nmc.Dsn = mc.Dsn
 	if mc.LogMode == "" {
 		nmc.LogMode = "info"
 	} else {
 		nmc.LogMode = mc.LogMode
 	}
 	nmc.LogZap = mc.LogZap
+	nmc.LogPath = mc.LogPath
 	if mc.StringSize == 0 {
 		nmc.StringSize = 255
 	} else {
