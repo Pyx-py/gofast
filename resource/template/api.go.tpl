@@ -106,7 +106,7 @@ func Get{{.StructName}}List(c *gin.Context) {
     {{- end}}
         response.FailWithMessage("获取失败", c)
     } else {
-        response.OKWithDetailed(response.PageResult{
+        response.OkWithDetailed(response.PageResult{
             List:   list,
             Total:  total,
             Page:   pageInfo.Page,
