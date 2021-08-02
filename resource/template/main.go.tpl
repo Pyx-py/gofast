@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	address = "127.0.0.1:8888"
+	address = "0.0.0.0:8888"
 )
 
 func main() {
