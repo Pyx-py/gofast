@@ -132,11 +132,15 @@ go run main.go
 # 此命令下的flag含义如下：
 -m, --module : module名称，必传
 -p, --path : 项目目录路径，必传
--s, --sql : sql文件路径，非必传
--l, --log : 日志存放目录，非必传
--f, --gofast: 下载的gofast路径，非必传
--c, --column : 生成代码的列表接口的搜索字段，非必传
-
+-s, --sql : sql文件路径，非必传;不传则初始化项目代码中不包含基础业务代码
+-l, --log : 日志存放目录，非必传;不传则初始化的项目代码中不会包含日志部分
+-f, --gofast: 下载的gofast路径，非必传;当程序报错找不到gofast路径才需要手动传入
+-c, --column : 生成代码的列表接口的搜索字段，非必传;可选参数有：like，=，如要传参需要按照以下格式：
+```
+```  
+                column1:value1#column2:value2
+```
+```bash
 # 此时可执行
 ./gf init -m demo -p /root/user/demoProject
 # 即可生成最基础的代码框架(不含crud代码和日志包)

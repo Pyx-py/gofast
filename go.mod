@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/gin-gonic/gin v1.7.2
+	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/gookit/color v1.4.2
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
