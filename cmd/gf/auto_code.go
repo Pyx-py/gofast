@@ -514,6 +514,7 @@ func (t *AutoCoder) CreateTemp() (err error) {
 	// 写入文件前，先创建文件夹
 	fmt.Printf("needMKdirs::%v\n", needCreateDirs)
 	if err = utils.CreateDir(needCreateDirs...); err != nil {
+		fmt.Println("create dirs error:" + err.Error())
 		return err
 	}
 

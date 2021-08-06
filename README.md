@@ -14,44 +14,40 @@
 > gofast是一个基于 [GVA](https://github.com/flipped-aurora/gin-vue-admin) 的后端部分进行修改的代码生成项目，可以通过sql文件生成相应的crud的基本业务代码，减少开发量。
 ### 1.2 代码结构
 ```
-.
 ├── cmd
-│   ├── gf
-│   │   ├── initFile.go
-│   │   └── root.go
-│   └── main.go
-├── core
-│   └── zap.go
-├── gen_code.go
-├── global
-│   └── global.go
+│   └── gf
+│       ├── auto_code.go
+│       ├── initFile.go
+│       ├── main.go
+│       ├── resource
+│       │   ├── static
+│       │   │   ├── cors.static
+│       │   │   ├── directory.static
+│       │   │   ├── file_operation.static
+│       │   │   ├── global.static
+│       │   │   ├── loadtls.static
+│       │   │   ├── request.static
+│       │   │   ├── response.static
+│       │   │   └── rotatelogs.static
+│       │   └── template
+│       │       ├── api.go.tpl
+│       │       ├── api_health.go.tpl
+│       │       ├── error.go.tpl
+│       │       ├── gorm.go.tpl
+│       │       ├── health.go.tpl
+│       │       ├── initRouter.go.tpl
+│       │       ├── logger.go.tpl
+│       │       ├── main.go.tpl
+│       │       ├── model.go.tpl
+│       │       ├── request.go.tpl
+│       │       ├── router.go.tpl
+│       │       ├── service.go.tpl
+│       │       └── zap.go.tpl
+│       └── root.go
 ├── go.mod
 ├── go.sum
-├── initialize
-│   ├── gorm.go
-│   └── internal
-│       └── logger.go
-├── middleware
-│   ├── cors.go
-│   ├── error.go
-│   └── loadtls.go
 ├── README.md
-├── resource
-│   ├── static
-│   │   ├── api_health.static
-│   │   ├── request.static
-│   │   └── response.static
-│   └── template
-│       ├── api.go.tpl
-│       ├── health.go.tpl
-│       ├── initRouter.go.tpl
-│       ├── main.go.tpl
-│       ├── model.go.tpl
-│       ├── request.go.tpl
-│       ├── router.go.tpl
-│       └── service.go.tpl
 └── utils
-    ├── auto_code.go
     ├── directory.go
     ├── file_operation.go
     └── rotatelogs.go
@@ -59,8 +55,6 @@
 | 文件夹       | 说明                    | 描述                        |
 | ------------ | ----------------------- | --------------------------- |
 | `cmd`        | 命令行工具层                   | 用来生成代码的命令行工具 |
-| `api`        | api层                   | api层 |
-| `--v1`       | v1版本接口              | v1版本接口                  |
 | `core`       | 核心文件                | 核心组件zap的初始化 |
 | `docs`       | swagger文档目录         | swagger文档目录 |
 | `global`     | 全局对象                | 全局对象 |
