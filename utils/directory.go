@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -32,11 +31,7 @@ func CreateDir(dirs ...string) (err error) {
 	return err
 }
 
-func CopyFile(sourceFilePath, desFilePath string) error {
-	sExist, _ := PathExists(sourceFilePath)
-	if !sExist {
-		return fmt.Errorf("source file does't exist")
-	}
+func CopyFile(sourceContent, desFilePath string) error {
 	dExist, err := PathExists(desFilePath)
 
 	if err != nil {
@@ -50,11 +45,8 @@ func CopyFile(sourceFilePath, desFilePath string) error {
 	} else {
 		return nil
 	}
-	fileByte, rErr := ioutil.ReadFile(sourceFilePath)
-	if rErr != nil {
-		return rErr
-	}
-	wErr := ioutil.WriteFile(desFilePath, fileByte, 0755)
+
+	wErr := ioutil.WriteFile(desFilePath, []byte(sourceContent), 0755)
 	if wErr != nil {
 		return wErr
 	}

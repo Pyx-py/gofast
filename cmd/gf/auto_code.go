@@ -476,7 +476,8 @@ func (t *AutoCoder) copyAllStaticFile() error {
 		case "rotatelogs.static":
 			fp = t.ProjectPath + "/utils/rotatelogs.go"
 		}
-		if err := ioutil.WriteFile(fp, []byte(staticFileMap[s]), 0755); err != nil {
+		if err := utils.CopyFile(staticFileMap[s], fp); err != nil {
+			fmt.Println("copy file error:" + err.Error())
 			return err
 		}
 	}
