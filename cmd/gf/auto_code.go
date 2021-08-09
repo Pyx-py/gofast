@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"go/build"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -14,8 +15,13 @@ import (
 	"github.com/xwb1989/sqlparser"
 )
 
-var staticBox = packr.New("sBox", "./resource/static")
-var templateBox = packr.New("tBox", "./resource/template")
+const GOFAST = "github.com/pyx-py/gofast"
+
+// var staticBox = packr.New("sBox", "./resource/static")
+// var templateBox = packr.New("tBox", "./resource/template")
+
+var staticBox *packr.Box
+var templateBox *packr.Box
 
 var staticFileMap = make(map[string]string)
 var templateFileMap = make(map[string]string)
@@ -95,12 +101,28 @@ type tplData struct {
 	// autoMoveFilePath string
 }
 
-func init() {
-	getAllResourceFileName("./resource")
-	getAllResourceFile()
+func initData(gfPath string) error {
+	if gfPath == "" {
+		path, err := getGoFastPath()
+		if err != nil {
+			fmt.Println(err.Error())
+			return err
+		}
+		gfPath = path
+	}
+	initBox(gfPath)
+	if err := getAllResourceFileName(gfPath + "/cmd/gf/resource"); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	if err := getAllResourceFile(); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	return nil
 }
 
-func NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchTypeString, logPath string) (*AutoCoder, error) {
+func NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchTypeString, logPath, gofastPath string) (*AutoCoder, error) {
 	if projectPath == "" || moduleName == "" {
 		return nil, fmt.Errorf("projectPath or moduleName can not be null")
 	}
@@ -119,6 +141,9 @@ func NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchTypeString, log
 		Fields:     make([]*Field, 0),
 	}
 	// autoCoder.GoFastPath = gofastPath
+	if err := initData(gofastPath); err != nil {
+		return nil, err
+	}
 	autoCoder.SqlPath = sqlFilePath
 	autoCoder.ColSearchTypeString = colSearchTypeString
 	colSearchTypeMap := handleSearchMap(colSearchTypeString)
@@ -189,34 +214,39 @@ func NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchTypeString, log
 	return autoCoder, nil
 }
 
-// func GetGoFastPath() (string, error) {
-// 	gopath := os.Getenv("GOPATH")
-// 	if gopath == "" {
-// 		gopath = build.Default.GOPATH
-// 		if gopath == "" {
-// 			return "", fmt.Errorf("can not find gopath, need manual incoming gofast path parameter")
-// 		}
-// 	}
-// 	pathList := strings.Split(GOFAST, "/")
-// 	subPathList := pathList[0 : len(pathList)-1]
-// 	lastPath := pathList[len(pathList)-1]
-// 	prePath := gopath + "/pkg/mod"
-// 	for _, p := range subPathList {
-// 		prePath += "/" + p
-// 	}
-// 	dirInfo, err := ioutil.ReadDir(prePath)
-// 	if err != nil {
-// 		return "", fmt.Errorf("get dir info error:%s", err.Error())
-// 	}
-// 	var gofastPath string
-// 	for _, d := range dirInfo {
-// 		if strings.Contains(d.Name(), lastPath) {
-// 			gofastPath = prePath + "/" + d.Name()
-// 			break
-// 		}
-// 	}
-// 	return gofastPath, nil
-// }
+func initBox(gfPath string) {
+	staticBox = packr.New("sBox", gfPath+"/cmd/gf/resource/static")
+	templateBox = packr.New("tBox", gfPath+"/cmd/gf/resource/template")
+}
+
+func getGoFastPath() (string, error) {
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		gopath = build.Default.GOPATH
+		if gopath == "" {
+			return "", fmt.Errorf("can not find gopath, need manual incoming gofast path parameter")
+		}
+	}
+	pathList := strings.Split(GOFAST, "/")
+	subPathList := pathList[0 : len(pathList)-1]
+	lastPath := pathList[len(pathList)-1]
+	prePath := gopath + "/pkg/mod"
+	for _, p := range subPathList {
+		prePath += "/" + p
+	}
+	dirInfo, err := ioutil.ReadDir(prePath)
+	if err != nil {
+		return "", fmt.Errorf("get dir info error:%s", err.Error())
+	}
+	var gofastPath string
+	for _, d := range dirInfo {
+		if strings.Contains(d.Name(), lastPath) {
+			gofastPath = prePath + "/" + d.Name()
+			break
+		}
+	}
+	return gofastPath, nil
+}
 
 func handleSearchMap(colSearchMapString string) map[string]string {
 	var searchMap = make(map[string]string)
@@ -356,14 +386,14 @@ func getAllResourceFile() error {
 	for _, s := range staticFileList {
 		sc, err := staticBox.FindString(s)
 		if err != nil {
-			return err
+			return fmt.Errorf("get static file box err: %s", err.Error())
 		}
 		staticFileMap[s] = sc
 	}
 	for _, t := range templateFileList {
 		tc, err := templateBox.FindString(t)
 		if err != nil {
-			return err
+			return fmt.Errorf("get template file box err: %s", err.Error())
 		}
 		templateFileMap[t] = tc
 	}
@@ -373,7 +403,7 @@ func getAllResourceFile() error {
 func getAllResourceFileName(pathName string) error {
 	files, err := ioutil.ReadDir(pathName)
 	if err != nil {
-		return err
+		return fmt.Errorf("get all resource file name err: %s", err.Error())
 	}
 	for _, fi := range files {
 		if fi.IsDir() {

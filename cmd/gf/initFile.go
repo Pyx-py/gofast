@@ -12,7 +12,7 @@ var sqlFilePath string
 var logPath string
 var colSearchMapString string
 
-// var gofastPath string // gofast包被下载之后的在gopath或者mod下面的路径，用来找渲染文件和静态文件
+var gofastPath string // gofast包被下载之后的在gopath或者mod下面的路径，用来找渲染文件和静态文件
 
 var fileCmd = &cobra.Command{
 	Use:   "init",
@@ -42,7 +42,7 @@ var fileCmd = &cobra.Command{
 		// 	fmt.Printf("[error]:%s\n", err.Error())
 		// 	return
 		// }
-		coder, err := NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchMapString, logPath)
+		coder, err := NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchMapString, logPath, gofastPath)
 		if err != nil {
 			fmt.Printf("[error]:%s\n", err.Error())
 			return
@@ -61,5 +61,5 @@ func init() {
 	fileCmd.Flags().StringVarP(&sqlFilePath, "sql", "s", "", "sql file absolute path")
 	fileCmd.Flags().StringVarP(&logPath, "log", "l", "", "log dir path")
 	fileCmd.Flags().StringVarP(&colSearchMapString, "column", "c", "", "column search type")
-	// fileCmd.Flags().StringVarP(&gofastPath, "gofast", "f", "", "gofast package path")
+	fileCmd.Flags().StringVarP(&gofastPath, "gofast", "f", "", "gofast package path")
 }
