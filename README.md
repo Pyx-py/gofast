@@ -140,7 +140,11 @@ CREATE TABLE `t_band` (
                            KEY `idx_band_py` (`band_py`),
                            KEY `idx_band_name` (`band_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4
-# 此时只需要手动添加48行的数据库Dsn地址，再执行
+# 此时需要手动添加48行的数据库Dsn地址
+```
+> 		Dsn:          "", // 数据库的连接地址（必填，如: user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local）
+```bash
+# 再执行
 go run main.go
 # 项目成功运行
 ```
