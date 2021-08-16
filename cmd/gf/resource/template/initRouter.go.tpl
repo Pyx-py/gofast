@@ -26,6 +26,7 @@ func InitRouters(middlewares ...string) {
 		}
 	}
     router.InitHealthCheckRouter(group)
+	router.InitSystemRouter(group)
 	// router code genarate. **BEGIN !DON'T EDIT IT
 
 	// router code genarate. **END !DON'T EDIT IT

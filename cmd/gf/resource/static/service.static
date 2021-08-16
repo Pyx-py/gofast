@@ -1,0 +1,16 @@
+[Unit]
+Description=GF_PROJECT_NAME
+After=network.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/lib/GF_PROJECT_NAME
+ExecStartPre=/bin/mkdir -p /var/lib/GF_PROJECT_NAME
+ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/bin/GF_PROJECT_NAME -c /etc/GF_PROJECT_NAME/GF_PROJECT_NAME.conf"
+Restart=on-failure
+LimitNOFILE=10000000
+
+[Install]
+WantedBy=multi-user.target

@@ -73,6 +73,7 @@ var (
 type AutoCoder struct {
 	ModuleName          string        `json:"moduleName"`  // 用户的module名称
 	ProjectPath         string        `json:"projectPath"` // 用户的项目路径
+	ProjectName         string        `json:"projectName"` // 用户的项目名称
 	LogPath             string        `json:"logPath"`     // 日志的存放路径，为空代表不启用默认日志
 	TplPath             string        `json:"tplPath"`     // 模板文件dir
 	StructName          string        `json:"structName"`
@@ -98,7 +99,7 @@ type tplData struct {
 	template *template.Template
 	// locationPath string
 	autoCodePath string
-	// autoMoveFilePath string
+	repeat       bool
 }
 
 func initData(gfPath string) error {
@@ -126,19 +127,14 @@ func NewAutoCoder(projectPath, moduleName, sqlFilePath, colSearchTypeString, log
 	if projectPath == "" || moduleName == "" {
 		return nil, fmt.Errorf("projectPath or moduleName can not be null")
 	}
-	// if gofastPath == "" {
-	// 	path, err := GetGoFastPath()
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	gofastPath = path
-	// }
-	// fmt.Printf("get gofast path: %s", gofastPath)
+	projectNames := strings.Split(projectPath, "/")
+	projectName := projectNames[len(projectNames)-1]
 	// init aurocoder
 	autoCoder := &AutoCoder{
-		TplPath:    "./resource/template",
-		ImportTime: false,
-		Fields:     make([]*Field, 0),
+		ProjectName: projectName,
+		TplPath:     "./resource/template",
+		ImportTime:  false,
+		Fields:      make([]*Field, 0),
 	}
 	// autoCoder.GoFastPath = gofastPath
 	if err := initData(gofastPath); err != nil {
@@ -425,9 +421,13 @@ func getAllResourceFileName(pathName string) error {
 
 func getCreateDir(projectPath string) []string {
 	var dirList = make([]string, 0)
+	dirList = append(dirList, projectPath+"/conf")
+	dirList = append(dirList, projectPath+"/centos7")
+	dirList = append(dirList, projectPath+"/config")
 	dirList = append(dirList, projectPath+"/router")
 	dirList = append(dirList, projectPath+"/model")
 	dirList = append(dirList, projectPath+"/api")
+	dirList = append(dirList, projectPath+"/api/v1")
 	dirList = append(dirList, projectPath+"/service")
 	dirList = append(dirList, projectPath+"/initialize")
 	dirList = append(dirList, projectPath+"/core")
@@ -451,10 +451,27 @@ func (t *AutoCoder) getTplDataList() ([]tplData, error) {
 			template: tem,
 		}
 		switch tf {
+		case "makefile.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/makefile"
 		case "api_health.go.tpl":
-			td.autoCodePath = t.ProjectPath + "/api/health.go"
+			td.autoCodePath = t.ProjectPath + "/api/v1/health.go"
+		case "global.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/global/global.go"
+		case "redis.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/initialize/redis.go"
+		case "system_api.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/api/v1/system.go"
+		case "system_model.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/model/system.go"
+		case "system_response.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/model/response/system.go"
+		case "system_service.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/service/system.go"
+		case "viper.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/core/viper.go"
 		case "api.go.tpl":
-			td.autoCodePath = t.ProjectPath + "/api/" + t.TableName + ".go"
+			td.autoCodePath = t.ProjectPath + "/api/v1/" + t.TableName + ".go"
+			td.repeat = true
 		case "error.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/middleware/error.go"
 		case "gorm.go.tpl":
@@ -469,12 +486,16 @@ func (t *AutoCoder) getTplDataList() ([]tplData, error) {
 			td.autoCodePath = t.ProjectPath + "/main.go"
 		case "model.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/model/" + t.TableName + ".go"
+			td.repeat = true
 		case "request.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/model/request/" + t.TableName + ".go"
+			td.repeat = true
 		case "router.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/router/" + t.TableName + ".go"
+			td.repeat = true
 		case "service.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/service/" + t.TableName + ".go"
+			td.repeat = true
 		case "zap.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/core/zap.go"
 		}
@@ -489,6 +510,28 @@ func (t *AutoCoder) copyAllStaticFile() error {
 		switch s {
 		// case "api_health.static":
 		// 	fp = t.ProjectPath + "/api/health.go"
+		case "fmt_plus.static":
+			fp = t.ProjectPath + "/utils/fmt_plus.go"
+		case "config_struct.static":
+			fp = t.ProjectPath + "/config/config.go"
+		case "config.static":
+			fp = t.ProjectPath + "/conf/GF_PROJECT_NAME.conf"
+		case "service.static":
+			fp = t.ProjectPath + "/centos7/GF_PROJECT_NAME.service"
+		case "spec.static":
+			fp = t.ProjectPath + "/centos7/GF_PROJECT_NAME.spec"
+		case "constant.static":
+			fp = t.ProjectPath + "/utils/constant.go"
+		case "mysql_struct.static":
+			fp = t.ProjectPath + "/config/mysql.go"
+		case "redis_struct.static":
+			fp = t.ProjectPath + "/config/redis.go"
+		case "server.static":
+			fp = t.ProjectPath + "/utils/server.go"
+		case "system_struct.static":
+			fp = t.ProjectPath + "/config/system.go"
+		case "zap_struct.static":
+			fp = t.ProjectPath + "/config/zap.go"
 		case "cors.static":
 			fp = t.ProjectPath + "/middleware/cors.go"
 		case "global.static":
@@ -586,7 +629,7 @@ func (t *AutoCoder) CreateTemp() (err error) {
 					}
 				}
 			}
-		} else if strings.Contains(value.autoCodePath, "main") || strings.Contains(value.autoCodePath, "health") || strings.Contains(value.autoCodePath, "error") || strings.Contains(value.autoCodePath, "gorm") || strings.Contains(value.autoCodePath, "logger") || strings.Contains(value.autoCodePath, "zap") {
+		} else if !value.repeat {
 			fmt.Println("enter " + value.autoCodePath)
 			exist, err := utils.PathExists(value.autoCodePath)
 			if err != nil {

@@ -1,0 +1,14 @@
+package config
+
+type Zap struct {
+	Level         string `mapstructure:"level" json:"level" yaml:"level"`
+	Format        string `mapstructure:"format" json:"format" yaml:"format"`
+	Prefix        string `mapstructure:"prefix" json:"prefix" yaml:"prefix"`
+	LogPath       string `mapstructure:"log-path" json:"logPath"  yaml:"log-path"`
+	LogName       string `mapstructure:"log-name" json:"logName" yaml:"log-name"`
+    TextType      string `mapstructure:"text-type" json:"textType" yaml:"text-type"`
+	Day           int    `mapstructure:"day" json:"day" yaml:"day"`
+	ShowLine      bool   `mapstructure:"show-line" json:"showLine" yaml:"show-line"`
+	EncoderLevel   string `mapstructure:"encode-level" json:"encodeLevel" yaml:"encode-level"`
+	LogInConsole  bool   `mapstructure:"log-in-console" json:"logInConsole" yaml:"log-in-console"`
+}

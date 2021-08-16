@@ -1,0 +1,6 @@
+package utils
+
+const (
+	ConfigEnv = "GF_CONFIG"
+	ConfigFile = "./conf/GF_PROJECT_NAME.conf"
+)

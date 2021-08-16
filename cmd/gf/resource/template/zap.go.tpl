@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-
+    "{{.ModuleName}}/global"
 	"{{.ModuleName}}/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -135,5 +135,5 @@ func (lc LogConfig) getEncoderCore() (core zapcore.Core) {
 }
 
 func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2006/01/02-15:04:05.000"))
+	enc.AppendString(t.Format("["+global.GF_CONF.Zap.Prefix+"] " + "2006/01/02-15:04:05.000"))
 }

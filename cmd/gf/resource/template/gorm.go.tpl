@@ -2,7 +2,11 @@ package initialize
 
 import (
 	"fmt"
-
+    "os"
+    {{- if ne .LogPath ""}}
+    "{{.ModuleName}}/global"
+    "go.uber.org/zap"
+    {{- end}}
 	"{{.ModuleName}}/initialize/internal"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -69,6 +73,21 @@ func (mc MysqlConfig) GormMysql() *gorm.DB {
 		return db
 	}
 
+}
+
+func MysqlTables(db *gorm.DB, dst []interface{}) {
+	err := db.AutoMigrate(dst...)
+	if err != nil {
+        {{- if ne .LogPath ""}}
+		global.GF_LOG.Error("register table failed", zap.Any("err", err))
+        {{- else}}
+        panic(fmt.Errorf("register table failed,err:%s", err.Error()))
+        {{- end}}
+		os.Exit(0)
+	}
+    {{- if ne .LogPath ""}}
+	global.GF_LOG.Info("register table success")
+    {{- end}}
 }
 
 func gormConfig(logMode string, logZap bool) *gorm.Config {
