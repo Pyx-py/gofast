@@ -465,6 +465,8 @@ func (t *AutoCoder) getTplDataList() ([]tplData, error) {
 			td.autoCodePath = t.ProjectPath + "/model/system.go"
 		case "system_response.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/model/response/system.go"
+		case "system_router.go.tpl":
+			td.autoCodePath = t.ProjectPath + "/router/system.go"
 		case "system_service.go.tpl":
 			td.autoCodePath = t.ProjectPath + "/service/system.go"
 		case "viper.go.tpl":
