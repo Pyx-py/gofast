@@ -5,7 +5,9 @@ import (
 	"{{.ModuleName}}/global"
 	"{{.ModuleName}}/model"
 	"{{.ModuleName}}/utils"
+    {{- if ne .LogPath ""}}
 	"go.uber.org/zap"
+    {{- end}}
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
