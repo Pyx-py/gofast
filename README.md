@@ -232,6 +232,8 @@ swag init
 # 项目部署
 make rpm    // rpm打包
 
+# 生成的rpm包在项目下的rpms文件夹下
+
 # rpm包安装
 rpm -ivh PROJECT-VERSION.rpm
 
