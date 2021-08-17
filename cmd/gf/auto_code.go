@@ -316,7 +316,7 @@ func buildGormStr(col *sqlparser.ColumnDefinition, primaryIdxMap map[string]stri
 	}
 
 	if col.Type.Autoincrement {
-		builder.WriteString(" autoIncrement")
+		builder.WriteString(" auto_increment")
 	}
 
 	_, ok := primaryIdxMap[col.Name.String()]
