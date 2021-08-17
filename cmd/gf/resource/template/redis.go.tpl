@@ -3,7 +3,11 @@ package initialize
 import (
 	"{{.ModuleName}}/global"
 	"github.com/go-redis/redis"
+    {{- if ne .LogPath ""}}
 	"go.uber.org/zap"
+    {{- else}}
+    "fmt"
+    {{- end}}
 )
 
 func Redis() {
@@ -18,7 +22,7 @@ func Redis() {
     {{- if ne .LogPath "" }}
 		global.GF_LOG.Error("redis connect ping failed, err:", zap.Any("err", err))
     {{- else}}
-        panic(fmt.Errorf("redis connect ping failed, err:%s", err.Error()))
+        panic(fmt.Errorf("redis connect ping failed, err:%s", pong:%s, err.Error(), pong))
     {{- end}}
 	} else {
         {{- if ne .LogPath "" }}

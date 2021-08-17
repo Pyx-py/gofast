@@ -17,31 +17,51 @@
 ├── cmd
 │   └── gf
 │       ├── auto_code.go
+│       ├── gf
 │       ├── initFile.go
 │       ├── main.go
 │       ├── resource
 │       │   ├── static
+│       │   │   ├── config.static
+│       │   │   ├── config_struct.static
+│       │   │   ├── constant.static
 │       │   │   ├── cors.static
 │       │   │   ├── directory.static
 │       │   │   ├── file_operation.static
-│       │   │   ├── global.static
+│       │   │   ├── fmt_plus.static
 │       │   │   ├── loadtls.static
+│       │   │   ├── mysql_struct.static
+│       │   │   ├── redis_struct.static
 │       │   │   ├── request.static
 │       │   │   ├── response.static
-│       │   │   └── rotatelogs.static
+│       │   │   ├── rotatelogs.static
+│       │   │   ├── server.static
+│       │   │   ├── service.static
+│       │   │   ├── spec.static
+│       │   │   ├── system_struct.static
+│       │   │   └── zap_struct.static
 │       │   └── template
 │       │       ├── api.go.tpl
 │       │       ├── api_health.go.tpl
 │       │       ├── error.go.tpl
+│       │       ├── global.go.tpl
 │       │       ├── gorm.go.tpl
 │       │       ├── health.go.tpl
 │       │       ├── initRouter.go.tpl
 │       │       ├── logger.go.tpl
 │       │       ├── main.go.tpl
+│       │       ├── makefile.go.tpl
 │       │       ├── model.go.tpl
+│       │       ├── redis.go.tpl
 │       │       ├── request.go.tpl
 │       │       ├── router.go.tpl
 │       │       ├── service.go.tpl
+│       │       ├── system_api.go.tpl
+│       │       ├── system_model.go.tpl
+│       │       ├── system_response.go.tpl
+│       │       ├── system_router.go.tpl
+│       │       ├── system_service.go.tpl
+│       │       ├── viper.go.tpl
 │       │       └── zap.go.tpl
 │       └── root.go
 ├── go.mod
@@ -92,10 +112,6 @@ go get -u github.com/pyx-py/gofast/cmd/gf
 
 > export PATH="/root/go/bin:$PATH"
 
-```bash
-# 在项目下初始化module, 例子中以demo作为module名称(以下的demo都是代值module)，使用时也需要更改为自己的module
-go mod init demo
-```
 
 
 
@@ -111,7 +127,7 @@ gf init -h
 -m, --module : module名称，必传
 -p, --path : 项目目录路径，必传
 -s, --sql : sql文件路径，非必传;不传则初始化项目代码中不包含基础业务代码
--l, --log : 日志存放目录，非必传;不传则初始化的项目代码中不会包含日志部分
+-l, --log : 是否使用默认日志，非必传;不传则初始化的项目代码中不会包含日志部分
 -f, --gofast: 下载的gofast路径，非必传;当程序报错找不到gofast路径才需要手动传入
 -c, --column : 生成代码的列表接口的搜索条件字段，非必传;可选参数有：like，=，<=, >=,如要传参需要按照以下格式：
 ```
@@ -122,8 +138,6 @@ gf init -h
 # 此时可执行
 gf init -m demo -p /root/user/demoProject
 # 即可生成最基础的代码框架(不含crud代码和日志包)
-# 拉取依赖包
-go mod tidy
 
 # 可再次执行含有sql的命令，例如gf init -m demo -p /root/user/demoProject -s ./t_band.sql  就能生成crud业务代码, 
 # sql文件格式示例：
@@ -140,10 +154,9 @@ CREATE TABLE `t_band` (
                            KEY `idx_band_py` (`band_py`),
                            KEY `idx_band_name` (`band_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4
-# 此时需要手动添加48行的数据库Dsn地址
-```
-> 		Dsn:          "", // 数据库的连接地址（必填，如: user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local）
-```bash
+
+# 修改配置文件
+conf下的.config文件
 # 再执行
 go run main.go
 # 项目成功运行
@@ -174,3 +187,12 @@ swag init
 > 2.内置了三个middleware，需要使用可以在main文件中初始化router的函数中以参数传入,其中error中间件需要开启日志，也就是传入命令行中的-l参数，或者使用自定义的日志方可使用  
 
 > 3.若第一次初始化未开启日志，但后续添加生成业务代码时又传入了log参数，需要在main文件中把注释的日志初始化部分打开，并填写日志文件夹的路径
+
+
+### 2.4 项目部署
+```bash
+# 项目部署
+make prepare  // 文件预处理
+
+make rpm    // rpm打包
+```

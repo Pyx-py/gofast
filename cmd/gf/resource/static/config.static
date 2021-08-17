@@ -4,8 +4,8 @@ config="charset=utf8mb4&parseTime=True&loc=Local"
 db-name=test
 username=root
 password=123456
-max-idle-conns=200
-max-open-conns=128
+max-idle-conns=10
+max-open-conns=100
 log-mode=info
 log-zap=false
 

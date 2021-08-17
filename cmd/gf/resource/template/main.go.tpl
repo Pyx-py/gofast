@@ -2,9 +2,7 @@
 package main
 
 import (
-	{{- if ne .LogPath ""}}
 	"{{.ModuleName}}/core"
-	{{- end}}
 	"{{.ModuleName}}/global"
 	"{{.ModuleName}}/initialize"
 	"github.com/fvbock/endless"

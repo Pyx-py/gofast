@@ -1,12 +1,14 @@
 package v1
 
 import (
+    {{- if ne .LogPath ""}}
 	"{{.ModuleName}}/global"
+    "go.uber.org/zap"
+    {{- end}}
 	"{{.ModuleName}}/model"
 	"{{.ModuleName}}/model/response"
 	"{{.ModuleName}}/service"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 // @Tags System
