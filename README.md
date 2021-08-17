@@ -81,6 +81,40 @@
 | `--template`       | 模板文件                | 代码文件的渲染|
 | `docs`       | swagger文档目录         | swagger文档目录 |
 | `utils`      | 工具包                  | 工具函数封装，包括自动生成代码的逻辑，文件操作的逻辑            |
+
+### 1.3 配置文件说明
+[mysql]  
+path=127.0.0.1:3306  # mysql地址  
+config="charset=utf8mb4&parseTime=True&loc=Local"  # 数据库连接基本配置  
+db-name=test  # 数据库名称  
+username=root  # mysql用户名  
+password=123456  #  mysql密码  
+max-idle-conns=10  # mysql连接的最大保持数  
+max-open-conns=100  # mysql连接的最大打开数  
+log-mode=info  # mysqlsql日志级别  
+log-zap=false  # 是否把sql日志详情加入日志文件，默认只会在控制台打印
+
+[redis]  
+db=0  # 数据库编号  
+addr=127.0.0.1:6379  # redis地址  
+password=""  # redis密码  
+
+[system]  
+env=public  # 暂时不用  
+addr=0.0.0.0:8888  # 启动地址  
+db-type=mysql  # 暂时不用  
+
+
+[zap]  
+log-path=./log  # 日志存储路径文件夹  
+level=info  # 日志级别  
+format=console  # 日志格式，console或者是json  
+prefix=gofast  # 日志记录的前缀  
+log-name=gofast  # 最新日志文件的名称
+show-line=True  # 日志是否追踪行号  
+encode-level=LowercaseLevelEncoder  # 日志编码， 默认小写编码  
+log-in-console=True  # 日志是否同时在控制台打印
+
 ## 2. 使用说明
 
 ```
@@ -127,7 +161,7 @@ gf init -h
 -m, --module : module名称，必传
 -p, --path : 项目目录路径，必传
 -s, --sql : sql文件路径，非必传;不传则初始化项目代码中不包含基础业务代码
--l, --log : 是否使用默认日志，非必传;不传则初始化的项目代码中不会包含日志部分
+-l, --log : 是否使用默认日志，此参数不为空即为真，非必传;不传则初始化的项目代码中不会包含日志部分
 -f, --gofast: 下载的gofast路径，非必传;当程序报错找不到gofast路径才需要手动传入
 -c, --column : 生成代码的列表接口的搜索条件字段，非必传;可选参数有：like，=，<=, >=,如要传参需要按照以下格式：
 ```
@@ -137,7 +171,7 @@ gf init -h
 ```bash
 # 此时可执行
 gf init -m demo -p /root/user/demoProject
-# 即可生成最基础的代码框架(不含crud代码和日志包)
+# 即可生成最基础的代码框架(不含crud代码和日志包，推荐添加日志)
 
 # 可再次执行含有sql的命令，例如gf init -m demo -p /root/user/demoProject -s ./t_band.sql  就能生成crud业务代码, 
 # sql文件格式示例：
@@ -155,14 +189,18 @@ CREATE TABLE `t_band` (
                            KEY `idx_band_name` (`band_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4
 
-# 修改配置文件
-conf下的.config文件
+# 初始化项目和包依赖
+make prepare
+
+# 配置文件修改
+conf下的xxx.config文件
+
 # 再执行
 go run main.go
-# 项目成功运行
+# 项目成功运行，可以继续进行后续的业务开发
 ```
 
-### 2.3 swagger自动化API文档
+### 2.3 swagger自动化API文档（可选）
 
 #### 2.3.1 安装 swagger
 
@@ -189,10 +227,20 @@ swag init
 > 3.若第一次初始化未开启日志，但后续添加生成业务代码时又传入了log参数，需要在main文件中把注释的日志初始化部分打开，并填写日志文件夹的路径
 
 
-### 2.4 项目部署
+### 2.4 生产环境的项目部署
 ```bash
 # 项目部署
-make prepare  // 文件预处理
-
 make rpm    // rpm打包
+
+# rpm包安装
+rpm -ivh PROJECT-VERSION.rpm
+
+# 此时已经生成了下列的文件(PROJECT为项目文件夹名)
+项目二进制文件：/usr/bin/PROJECT
+service文件：/usr/lib/systemd/system/PROJECT.service
+配置文件：/etc/PROJECT/PROJECT.conf
+日志文件夹：/var/log/PROJECT(需要在配置文件中配置)
+
+# 项目启动
+systemctl start PROJECT.service
 ```
